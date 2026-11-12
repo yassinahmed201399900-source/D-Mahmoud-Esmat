@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">الملف الشخصي - المدير</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+            position: relative;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .btn-top {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-top:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-admin {
+            background-color: #dc3545;
+        }
+
+        .btn-admin:hover {
+            background-color: #bd2130;
+        }
+
+        /* البطاقة الشخصية */
+        .sidebar {
+            width: 320px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: fit-content;
+        }
+
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--main-color, #ffc107);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #eee;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .btn-cv {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--main-color, #ffc107);
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            transition: background 0.3s;
+            text-align: center;
+        }
+
+        .btn-cv:hover {
+            opacity: 0.85;
+        }
+
+        .phone-box {
+            width: 100%;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .phone-number {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #333;
+            direction: ltr;
+        }
+
+        .btn-copy {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-copy:hover {
+            background-color: #0056b3;
+        }
+
+        /* روابط التواصل الاجتماعي الجديدة */
+        .social-links {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .social-btn {
+            padding: 6px 12px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: none; /* مخفي لحد ما يضيفه */
+        }
+
+        .social-btn:hover {
+            background: #e2e6ea;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .main-content h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .project-card {
+            margin-top: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-right: 5px solid var(--main-color, #ffc107);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .project-card h3 {
+            color: var(--main-color-dark, #d39e00);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        /* لوحة التحكم للأدمن */
+        .admin-panel {
+            display: none;
+            background-color: #fff3cd;
+            border: 2px dashed #ffeeba;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .admin-panel h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ffeeba;
+            padding-bottom: 8px;
+        }
+
+        .admin-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .admin-input-group label {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .admin-input-group input, .admin-input-group textarea, .admin-input-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-reset {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-reset:hover {
+            background-color: #bd2130;
+        }
+
+        /* نافذة الباسورد */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            outline: none;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .toggle-pwd {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-modal-login {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-modal-cancel {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="btn-top">← الرئيسية</a>
+        <button class="btn-top btn-admin" onclick="showLoginModal()">🔒 لوحة التحكم الشاملة</button>
+    </div>
+
+    <!-- البطاقة الشخصية -->
+    <aside class="sidebar">
+        <img id="userImg" src="manager.jpg" onerror="this.onerror=null; this.src='manager.png';" alt="صورة المدير" class="profile-img">
+        
+        <h2 class="profile-name" id="displayManagerName">المدير العام</h2>
+        <p class="profile-title" id="displayManagerTitle">مدير المشروع / Project Manager</p>
+
+        <a id="displayCvLink" href="managercv.pdf" target="_blank" class="btn-cv">📄 عرض / تحميل الـ CV</a>
+
+        <div class="phone-box">
+            <span class="phone-number" id="phoneNumber">01000000000</span>
+            <button class="btn-copy" id="copyBtn" onclick="copyPhone()">نسخ الرقم</button>
+        </div>
+
+        <!-- أزرار السوشيال ميديا -->
+        <div class="social-links">
+            <a id="socialFb" href="#" target="_blank" class="social-btn">فيس بوك</a>
+            <a id="socialTg" href="#" target="_blank" class="social-btn">تليجرام</a>
+            <a id="socialMail" href="#" target="_blank" class="social-btn">إيميل</a>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <h1 id="displayMainTitle">اللوحة التعريفية والإنجازات</h1>
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <div class="project-card">
+            <h3 id="displaySectionTitle">الإنجازات والمهام الإدارية</h3>
+            <p id="displayAchievements">لم يتم إضافة إنجازات بعد...</p>
+        </div>
+
+        <!-- لوحة التحكم للأدمن -->
+        <div class="admin-panel" id="adminPanel">
+            <h3>⚙️ لوحة التعديل والتحكم الكامل</h3>
+            
+            <div class="admin-input-group">
+                <label>اسم المدير:</label>
+                <input type="text" id="inputName">
+            </div>
+
+            <div class="admin-input-group">
+                <label>المسمى الوظيفي:</label>
+                <input type="text" id="inputTitle">
+            </div>
+
+            <div class="admin-input-group">
+                <label>اختر الصورة الشخصية:</label>
+                <input type="file" id="inputFileImg" accept="image/*">
+            </div>
+
+            <div class="admin-input-group">
+                <label>رقم الهاتف:</label>
+                <input type="text" id="inputPhone">
+            </div>
+
+            <div class="admin-input-group">
+                <label>اختر ملف الـ CV (PDF):</label>
+                <input type="file" id="inputFileCv" accept=".pdf">
+            </div>
+
+            <div class="admin-input-group">
+                <label>لون تصميم الصفحة المميز:</label>
+                <select id="inputThemeColor">
+                    <option value="#ffc107">أصفر ملكي (افتراضي)</option>
+                    <option value="#007bff">أزرق تقني</option>
+                    <option value="#28a745">أخضر إبداعي</option>
+                    <option value="#dc3545">أحمر قيادي</option>
+                </select>
+            </div>
+
+            <div class="admin-input-group">
+                <label>رابط فيس بوك:</label>
+                <input type="url" id="inputFb" placeholder="https://facebook.com/...">
+            </div>
+
+            <div class="admin-input-group">
+                <label>رابط تليجرام:</label>
+                <input type="url" id="inputTg" placeholder="https://t.me/...">
+            </div>
+
+            <div class="admin-input-group">
+                <label>البريد الإلكتروني:</label>
+                <input type="email" id="inputMail" placeholder="name@example.com">
+            </div>
+
+            <div class="admin-input-group">
+                <label>عنوان قسم الإنجازات:</label>
+                <input type="text" id="inputSecTitle">
+            </div>
+
+            <div class="admin-input-group">
+                <label>نص الإنجازات والمهام:</label>
+                <textarea id="inputAchievements" rows="4"></textarea>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-save" onclick="saveAllData()">حفظ وتطبيق التعديلات ✓</button>
+                <button class="btn-reset" onclick="resetData()">إعادة ضبط للافتراضي ⟳</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- نافذة تسجيل الدخول السري -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h3>🔒 تسجيل دخول الأدمن</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">أدخل الرقم السري المعتمد</p>
+            
+            <div class="password-wrapper">
+                <input type="password" id="pwdInput" class="password-input" placeholder="••••••" onkeypress="checkEnterKey(event)">
+                <span class="toggle-pwd" onclick="togglePassword()">👁️</span>
+            </div>
+            
+            <div class="error-msg" id="errorMsg">الرقم السري غير صحيح!</div>
+
+            <div class="modal-buttons">
+                <button class="btn-modal-login" onclick="validatePassword()">دخول</button>
+                <button class="btn-modal-cancel" onclick="closeLoginModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-auth.js"></script>
+
+    <script>
+        // استرجاع البيانات المحفوظة عند التحميل
+        window.onload = function() {
+            if(localStorage.getItem('m_name')) document.getElementById("displayManagerName").innerText = localStorage.getItem('m_name');
+            if(localStorage.getItem('m_title')) document.getElementById("displayManagerTitle").innerText = localStorage.getItem('m_title');
+            if(localStorage.getItem('m_img')) document.getElementById("userImg").src = localStorage.getItem('m_img');
+            if(localStorage.getItem('m_phone')) document.getElementById("phoneNumber").innerText = localStorage.getItem('m_phone');
+            if(localStorage.getItem('m_cv')) document.getElementById("displayCvLink").href = localStorage.getItem('m_cv');
+            if(localStorage.getItem('m_sectitle')) document.getElementById("displaySectionTitle").innerText = localStorage.getItem('m_sectitle');
+            if(localStorage.getItem('m_ach')) document.getElementById("displayAchievements").innerText = localStorage.getItem('m_ach');
+            
+            // استرجاع اللون
+            let savedColor = localStorage.getItem('m_color');
+            if(savedColor) applyThemeColor(savedColor);
+
+            // استرجاع السوشيال ميديا
+            setupSocialLink('m_fb', 'socialFb');
+            setupSocialLink('m_tg', 'socialTg');
+            setupSocialLink('m_mail', 'socialMail', 'mailto:');
+        }
+
+        function applyThemeColor(color) {
+            document.documentElement.style.setProperty('--main-color', color);
+            // تحديد درجة أغمق قليلاً للعنوان الفرعي
+            document.documentElement.style.setProperty('--main-color-dark', color);
+        }
+
+        function setupSocialLink(storageKey, elementId, prefix = '') {
+            let val = localStorage.getItem(storageKey);
+            let el = document.getElementById(elementId);
+            if(val && val.trim() !== '') {
+                el.href = prefix + val;
+                el.style.display = 'inline-block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById("pwdInput").value = "";
+            document.getElementById("errorMsg").style.display = "none";
+            document.getElementById("loginModal").style.display = "flex";
+            document.getElementById("pwdInput").focus();
+        }
+
+        function closeLoginModal() {
+            document.getElementById("loginModal").style.display = "none";
+        }
+
+        function togglePassword() {
+            const pwdInput = document.getElementById("pwdInput");
+            pwdInput.type = (pwdInput.type === "password") ? "text" : "password";
+        }
+
+        function checkEnterKey(e) {
+            if (e.key === "Enter") validatePassword();
+        }
+
+        function validatePassword() {
+            const entered = document.getElementById("pwdInput").value;
+            
+            if (verifyAdminPassword(entered)) {
+                closeLoginModal();
+                
+                document.getElementById("inputName").value = document.getElementById("displayManagerName").innerText;
+                document.getElementById("inputTitle").value = document.getElementById("displayManagerTitle").innerText;
+                document.getElementById("inputPhone").value = document.getElementById("phoneNumber").innerText;
+                document.getElementById("inputSecTitle").value = document.getElementById("displaySectionTitle").innerText;
+                document.getElementById("inputAchievements").value = document.getElementById("displayAchievements").innerText;
+                document.getElementById("inputThemeColor").value = localStorage.getItem('m_color') || '#ffc107';
+                document.getElementById("inputFb").value = localStorage.getItem('m_fb') || '';
+                document.getElementById("inputTg").value = localStorage.getItem('m_tg') || '';
+                document.getElementById("inputMail").value = localStorage.getItem('m_mail') || '';
+
+                document.getElementById("adminPanel").style.display = "block";
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } else {
+                document.getElementById("errorMsg").style.display = "block";
+            }
+        }
+
+        function saveAllData() {
+            const name = document.getElementById("inputName").value;
+            const title = document.getElementById("inputTitle").value;
+            const phone = document.getElementById("inputPhone").value;
+            const color = document.getElementById("inputThemeColor").value;
+            const fb = document.getElementById("inputFb").value;
+            const tg = document.getElementById("inputTg").value;
+            const mail = document.getElementById("inputMail").value;
+            const secTitle = document.getElementById("inputSecTitle").value;
+            const achievements = document.getElementById("inputAchievements").value;
+
+            if(name) { localStorage.setItem('m_name', name); document.getElementById("displayManagerName").innerText = name; }
+            if(title) { localStorage.setItem('m_title', title); document.getElementById("displayManagerTitle").innerText = title; }
+            if(phone) { localStorage.setItem('m_phone', phone); document.getElementById("phoneNumber").innerText = phone; }
+            
+            localStorage.setItem('m_color', color);
+            applyThemeColor(color);
+
+            localStorage.setItem('m_fb', fb);
+            localStorage.setItem('m_tg', tg);
+            localStorage.setItem('m_mail', mail);
+            setupSocialLink('m_fb', 'socialFb');
+            setupSocialLink('m_tg', 'socialTg');
+            setupSocialLink('m_mail', 'socialMail', 'mailto:');
+
+            if(secTitle) { localStorage.setItem('m_sectitle', secTitle); document.getElementById("displaySectionTitle").innerText = secTitle; }
+            if(achievements) { localStorage.setItem('m_ach', achievements); document.getElementById("displayAchievements").innerText = achievements; }
+
+            const imgFile = document.getElementById("inputFileImg").files[0];
+            if (imgFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('m_img', e.target.result);
+                    document.getElementById("userImg").src = e.target.result;
+                }
+                reader.readAsDataURL(imgFile);
+            }
+
+            const cvFile = document.getElementById("inputFileCv").files[0];
+            if (cvFile) {
+                const readerCv = new FileReader();
+                readerCv.onload = function(e) {
+                    localStorage.setItem('m_cv', e.target.result);
+                    document.getElementById("displayCvLink").href = e.target.result;
+                }
+                readerCv.readAsDataURL(cvFile);
+            }
+
+            alert("تم حفظ وتحديث كل بيانات الموقع بنجاح تام! ✓");
+            document.getElementById("adminPanel").style.display = "none";
+        }
+
+        function resetData() {
+            if(confirm("هل أنت متأكد من مسح كافة التعديلات والعودة للافتراضي؟")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function copyPhone() {
+            const phoneText = document.getElementById("phoneNumber").innerText;
+            const btn = document.getElementById("copyBtn");
+            
+            navigator.clipboard.writeText(phoneText).then(() => {
+                btn.innerText = "تم النسخ بنجاح! ✓";
+                btn.style.backgroundColor = "#17a2b8";
+                setTimeout(() => {
+                    btn.innerText = "نسخ الرقم";
+                    btn.style.backgroundColor = "#007bff";
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>
